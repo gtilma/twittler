@@ -1,0 +1,37 @@
+body {
+  font-family: 'Lato';
+}
+
+.banner,
+.tweet {
+  margin: 1em auto;
+  max-width: 30em;
+}
+
+.banner > img {
+  width: 25em;
+}
+
+.message,
+.subMessage {
+  margin: 0.5em auto 0.5em;
+}
+
+.timestamp,
+.subTimestamp {
+  color: gray;
+  font-size: 0.8em;
+  text-align: right;
+}
+
+.tweeter {
+  color: #4695D7;
+  display: block;
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+.tweetStream {
+  display: none;
+  margin-left: 1.5em;
+}

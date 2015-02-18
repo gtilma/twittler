@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Twittler: Twitter with an L</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:400, 700">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <meta name="viewport" content="width=device-width">
   </head>
   <body>
     <script>
@@ -11,14 +15,58 @@
         var $body = $('body');
         $body.html('');
 
+        var headerImg = 'twittler.png';
+        var $header = $('<div class="banner"><img src="' + headerImg + '" alt=""></div>')
+        $header.appendTo($body);
+
         var index = streams.home.length - 1;
-        while(index >= 0){
+        while (index >= 0) {
           var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
+          var $tweet = $('<div class="tweet"></div>');
+
+          var $tweeter = $('<a href="#" class="tweeter"></a>');
+          $tweeter.text('@' + tweet.user);
+          $tweeter.prependTo($tweet);
+
+          var $message = $('<div class="message"></div>');
+          $message.text(tweet.message);
+          $message.appendTo($tweet);
+
+          var $timestamp = $('<div class="timestamp"></div>');
+          $timestamp.text(tweet.created_at);
+          $timestamp.appendTo($tweet);
+
+          // User's tweets
+          var $tweetStream = $('<div class="tweetStream"></div>');
+
+          var username = tweet.user;
+          var j = streams.users[username].length - 1;
+          while (j >= 0) {
+            var subTweet = streams.users[username][j];
+            var $subTweet = $('<div class="subTweet"></div>');
+
+            var $subMessage = $('<div class="subMessage"></div>');
+            $subMessage.text(subTweet.message);
+            $subMessage.appendTo($subTweet);
+
+            var $subTimestamp = $('<div class="subTimestamp"></div>');
+            $subTimestamp.text(subTweet.created_at);
+            $subTimestamp.appendTo($subTweet);
+
+            $subTweet.appendTo($tweetStream);
+
+            j -= 1;
+          }
+
+          $tweetStream.appendTo($tweet);
           $tweet.appendTo($body);
+
           index -= 1;
         }
+
+        $('.tweeter').click(function() {
+          $(this).siblings('.tweetStream').slideToggle();
+        });
 
       });
 
