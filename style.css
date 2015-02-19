@@ -1,5 +1,5 @@
 body {
-  font-family: 'Lato';
+  font-family: 'Lato', Arial, sans-serif;
 }
 
 .banner,
@@ -8,13 +8,38 @@ body {
   max-width: 30em;
 }
 
-.banner > img {
+.banner {
+  height: 6em;
+}
+
+.banner img {
+  clear: both;
+  display: inline-block;
+  margin: 0 auto;
+  /*position: fixed;*/
   width: 25em;
 }
 
 .message,
 .subMessage {
   margin: 0.5em auto 0.5em;
+}
+
+.newTweets {
+  background-color: #4695D7;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font: inherit;
+  height: 3em;
+  right: 15%;
+  margin: 1em auto;
+  padding: 0 2em 0;
+  position: fixed;
+}
+
+.newTweets:hover{
+  background-color: #0e6ab6;
 }
 
 .timestamp,
