@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Twittler: Twitter... with an L</title>
+    <link rel="icon" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:400, 700">
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="jquery.js"></script>
@@ -64,7 +65,7 @@
         $header.appendTo($body);
 
         var $newTweets = $('<button class="newTweets""></button>');
-        $newTweets.text('New Tweets');
+        $newTweets.text('New Tweet');
         $newTweets.appendTo($header);
 
         var index = streams.home.length - 1;
@@ -114,6 +115,10 @@
 
           $tweet.insertAfter($header);
           $('.tweet').first().hide().slideDown();
+
+          $('.tweeter').click(function() {
+            $(this).siblings('.tweetStream').slideToggle();
+          });
         });
 
         $('.tweeter').click(function() {
