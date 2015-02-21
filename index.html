@@ -14,89 +14,51 @@
     <script>
 
       $(document).ready(function(){
-        // Function to insert tweet
-        var insertTweet = function() {
-          var tweet = streams.home[index];
-          var $tweet = $('<div class="tweet"></div>');
-
-          var $tweeter = $('<a href="#" class="tweeter"></a>');
-          $tweeter.text('@' + tweet.user);
-          $tweeter.prependTo($tweet);
-
-          var $message = $('<div class="message"></div>');
-          $message.text(tweet.message);
-          $message.appendTo($tweet);
-
-          var $timestamp = $('<div class="timestamp"></div>');
-          $timestamp.text(jQuery.timeago(tweet.created_at));
-          $timestamp.appendTo($tweet);
-
-          // User's tweets
-          var $tweetStream = $('<div class="tweetStream"></div>');
-
-          var username = tweet.user;
-          var j = streams.users[username].length - 1;
-          while (j >= 0) {
-            var subTweet = streams.users[username][j];
-            var $subTweet = $('<div class="subTweet"></div>');
-
-            var $subMessage = $('<div class="subMessage"></div>');
-            $subMessage.text(subTweet.message);
-            $subMessage.appendTo($subTweet);
-
-            var $subTimestamp = $('<div class="subTimestamp"></div>');
-            $subTimestamp.text(jQuery.timeago(subTweet.created_at));
-            $subTimestamp.appendTo($subTweet);
-
-            $subTweet.appendTo($tweetStream);
-
-            j -= 1;
-          }
-
-          $tweetStream.appendTo($tweet);
-          $tweet.appendTo($body);
-        };
-
         var $body = $('body');
         $body.html('');
 
         var headerImg = 'twittler.png';
-        var $header = $('<header class="banner"><img src="' + headerImg + '" alt=""></header>');
+        var $header = $('<header><img src="' + headerImg + '" alt=""></header>');
         $header.appendTo($body);
 
-        var $newTweets = $('<button class="newTweets""></button>');
-        $newTweets.text('New Tweet');
-        $newTweets.appendTo($header);
+        var $newTweetButton = $('<button class="newTweet""></button>');
+        $newTweetButton.text('New Tweet');
+        $newTweetButton.appendTo($header);
 
-        var index = streams.home.length - 1;
-        while (index >= 0) {
-          insertTweet();
-          index -= 1;
-        }
-
-        $('.newTweets').click(function() {
-          var latest = streams.home.length - 1;
-          var tweet = streams.home[latest];
+        // Create tweet and cyle through user's stream
+        var buildTweet = function(index) {
+          var tweet = streams.home[index];
           var $tweet = $('<div class="tweet"></div>');
-
-          var $tweeter = $('<a href="#" class="tweeter"></a>');
+          var $tweeter = $('<a href="javascript:void(0)" class="tweeter"></a>');
           $tweeter.text('@' + tweet.user);
+          $expandArrow = $('<div class="expand"></div>');
+          $expandArrow.appendTo($tweeter);
           $tweeter.prependTo($tweet);
 
           var $message = $('<div class="message"></div>');
           $message.text(tweet.message);
           $message.appendTo($tweet);
 
-          var $timestamp = $('<div class="timestamp"></div>');
+          var $timestamp = $('<time class="timestamp"></time>');
           $timestamp.text(jQuery.timeago(tweet.created_at));
           $timestamp.appendTo($tweet);
 
-          // User's tweets
-          var $tweetStream = $('<div class="tweetStream"></div>');
+          // Store all of user's tweets in object, avoid cycling through stream every time
           var username = tweet.user;
-          var j = streams.users[username].length - 1;
-          while (j >= 0) {
-            var subTweet = streams.users[username][j];
+          var last = streams.users[username].length - 1;
+          var latestTweet = streams.users[username][last];
+
+          if (!allUserTweets.hasOwnProperty(username)) {
+            allUserTweets[username] = streams.users[username].slice();
+          } else if (allUserTweets[username][allUserTweets[username].length - 1] !== latestTweet) {
+            allUserTweets[username].push(latestTweet);
+          }
+
+          var i = allUserTweets[username].length - 1;
+          var $userStream = $('<div class="userStream"></div>');
+
+          while (i >= 0) {
+            var subTweet = allUserTweets[username][i];
             var $subTweet = $('<div class="subTweet"></div>');
 
             var $subMessage = $('<div class="subMessage"></div>');
@@ -107,24 +69,40 @@
             $subTimestamp.text(jQuery.timeago(subTweet.created_at));
             $subTimestamp.appendTo($subTweet);
 
-            $subTweet.appendTo($tweetStream);
+            $subTweet.appendTo($userStream);
 
-            j -= 1;
+            i -= 1;
           }
-          $tweetStream.appendTo($tweet);
 
-          $tweet.insertAfter($header);
-          $('.tweet').first().hide().slideDown();
+          $userStream.appendTo($tweet);
+          return $tweet;
+        };
 
-          $('.tweeter').click(function() {
-            $(this).siblings('.tweetStream').slideToggle();
-          });
+        // List all tweets in home stream
+        var index = streams.home.length - 1;
+        var allUserTweets = {};
+
+        while (index >= 0) {
+          var $newTweet = buildTweet(index);
+          $newTweet.appendTo($('body'));
+          index -= 1;
+        }
+
+        // Show user's tweets
+        $('body').on('click', '.tweeter', function() {
+          $(this).find('div').toggleClass('expand');
+          $(this).find('div').toggleClass('collapse');
+          $(this).siblings('.userStream').slideToggle();
         });
 
-        $('.tweeter').click(function() {
-          $(this).siblings('.tweetStream').slideToggle();
+        $('.newTweet').click(function(){
+          index = streams.home.length - 1;
+          var $newTweet = buildTweet(index);
+          var $firstTweet = $('.tweet').first();
+          $newTweet.insertBefore($firstTweet)
+                   .hide()
+                   .slideDown();
         });
-
       });
 
     </script>

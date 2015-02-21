@@ -2,17 +2,35 @@ body {
   font-family: 'Lato', Arial, sans-serif;
 }
 
-.banner,
+.expand,
+.collapse {
+  margin-left: 1em;
+  display: inline-block;
+  background-image: url('expand-collapse.png');
+  background-repeat: no-repeat;
+  height: 17.5px;
+  width: 17.5px;
+}
+
+.expand {
+  background-position: 0 -70px;
+}
+
+.collapse {
+  background-position: 0 3px;
+}
+
+header,
 .tweet {
   margin: 1em auto;
   max-width: 30em;
 }
 
-.banner {
+header {
   height: 6em;
 }
 
-.banner img {
+header img {
   clear: both;
   display: inline-block;
   margin: 0 auto;
@@ -25,7 +43,7 @@ body {
   margin: 0.5em auto 0.5em;
 }
 
-.newTweets {
+.newTweet {
   background-color: #4695D7;
   border: none;
   border-radius: 5px;
@@ -44,6 +62,7 @@ body {
 
 .timestamp,
 .subTimestamp {
+  display: block;
   color: gray;
   font-size: 0.8em;
   text-align: right;
@@ -56,7 +75,7 @@ body {
   font-weight: 700;
 }
 
-.tweetStream {
+.userStream {
   display: none;
   margin-left: 1.5em;
 }
